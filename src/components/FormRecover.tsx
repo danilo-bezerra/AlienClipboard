@@ -6,14 +6,23 @@ import { Input } from "./Input";
 
 type Props = {
   onSubmit: (form: recoverForm) => void;
+  isLoading: boolean;
 };
 
-function FormRecover({ onSubmit }: Props) {
+function FormRecover({ onSubmit, isLoading }: Props) {
   const [accessCode, setAccessCode] = useState("");
   const [isError, setIsError] = useState(false);
 
+  function handleChange(value: string) {
+    if (isError) {
+      setIsError(false);
+    }
+    setAccessCode(value);
+  }
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement> | any) {
     e.preventDefault();
+    setIsError(false);
 
     if (!accessCode) {
       return setIsError(true);
@@ -29,12 +38,12 @@ function FormRecover({ onSubmit }: Props) {
       <Input
         id="access_code"
         value={accessCode}
-        onChange={({ target }) => setAccessCode(target.value)}
+        onChange={({ target }) => handleChange(target.value)}
         placeholder="Enter the access code"
         isInvalid={isError}
         mb={2}
       />
-      <Button mb={2} type="submit">
+      <Button isLoading={isLoading} mb={2} type="submit">
         Recover clipboard
       </Button>
     </Box>

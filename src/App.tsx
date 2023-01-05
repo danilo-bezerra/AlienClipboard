@@ -23,32 +23,42 @@ function App() {
   const [accessCode, setAccessCode] = useState("");
   const [recoveredText, setRecoveredText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isSendLoading, setSendIsLoading] = useState(false);
+  const [isRecoverLoading, setIsRecoverLoading] = useState(false);
 
   async function handleSendToClipboard(form: sendForm) {
     setErrorMessage("");
     setAccessCode("");
     setRecoveredText("");
+    setSendIsLoading(false);
 
     try {
+      setSendIsLoading(true);
       const res = await api.post("/clipboards", form);
       setAccessCode(res.data.id);
     } catch (e: any) {
       const error =
         e?.response?.data?.error || "Something went wrong. Try again";
       setErrorMessage(error);
+    } finally {
+      setSendIsLoading(false);
     }
   }
 
   async function handleRecoverFromClipboard(form: recoverForm) {
     setErrorMessage("");
+    setIsRecoverLoading(false);
 
     try {
+      setIsRecoverLoading(true);
       const res = await api.get("/clipboards/" + form.access_code);
       setRecoveredText(res.data.content);
     } catch (e: any) {
       const error =
         e?.response?.data?.error || "Something went wrong. Try again";
       setErrorMessage(error);
+    } finally {
+      setIsRecoverLoading(false);
     }
   }
 
@@ -72,13 +82,16 @@ function App() {
         <Heading as="h2" size="lg">
           Send To Clipboard
         </Heading>
-        <FormSend onSubmit={handleSendToClipboard} />
+        <FormSend onSubmit={handleSendToClipboard} isLoading={isSendLoading} />
         {accessCode && <AccessCodeBox accessCode={accessCode} />}
 
         <Heading as="h2" size="lg" mt={6}>
           Recover from clipboard
         </Heading>
-        <FormRecover onSubmit={handleRecoverFromClipboard} />
+        <FormRecover
+          isLoading={isRecoverLoading}
+          onSubmit={handleRecoverFromClipboard}
+        />
 
         <Textarea
           resize="none"
