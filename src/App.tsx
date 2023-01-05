@@ -6,8 +6,6 @@ import {
   Heading,
   Input,
   Text,
-  Textarea,
-  Alert,
   AlertIcon,
   AlertTitle,
   AlertDescription,
@@ -17,6 +15,9 @@ import FormSend from "./components/FormSend";
 import FormRecover from "./components/FormRecover";
 import { recoverForm, sendForm } from "./models/forms";
 import { api } from "./services/api";
+import { Textarea } from "./components/Textarea";
+import { Alert } from "./components/Alert";
+import { AccessCodeBox } from "./components/AccessCodeBox";
 
 function App() {
   const [accessCode, setAccessCode] = useState("");
@@ -24,19 +25,22 @@ function App() {
   const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSendToClipboard(form: sendForm) {
+    setErrorMessage("");
     setAccessCode("");
     setRecoveredText("");
 
     try {
       const res = await api.post("/clipboards", form);
       setAccessCode(res.data.id);
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      const error =
+        e?.response?.data?.error || "Something went wrong. Try again";
+      setErrorMessage(error);
     }
   }
 
   async function handleRecoverFromClipboard(form: recoverForm) {
-    console.log({ sendForm: form });
+    setErrorMessage("");
 
     try {
       const res = await api.get("/clipboards/" + form.access_code);
@@ -45,10 +49,6 @@ function App() {
       const error =
         e?.response?.data?.error || "Something went wrong. Try again";
       setErrorMessage(error);
-
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 5000);
     }
   }
 
@@ -66,30 +66,14 @@ function App() {
         }}
       >
         {errorMessage && (
-          <Alert status="error" mb={4}>
-            <AlertIcon />
-            <AlertTitle>Error: </AlertTitle>
-            <AlertDescription>{errorMessage}</AlertDescription>
-          </Alert>
+          <Alert description={errorMessage} status="error" mb={4} />
         )}
 
         <Heading as="h2" size="lg">
           Send To Clipboard
         </Heading>
         <FormSend onSubmit={handleSendToClipboard} />
-        {accessCode && (
-          <Box>
-            <Text fontSize="lg" py={2}>
-              Clipboard Access Code:{" "}
-              <Text as="span" color="cyan.500" fontSize="2xl">
-                {accessCode}
-              </Text>
-              <Text as="span" fontSize="sm" ml={2} color="gray.400">
-                (valid for 10 minutes)
-              </Text>
-            </Text>
-          </Box>
-        )}
+        {accessCode && <AccessCodeBox accessCode={accessCode} />}
 
         <Heading as="h2" size="lg" mt={6}>
           Recover from clipboard

@@ -1,6 +1,8 @@
-import { Box, Button, Input } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 import { recoverForm } from "../models/forms";
+import { Button } from "./Button";
+import { Input } from "./Input";
 
 type Props = {
   onSubmit: (form: recoverForm) => void;

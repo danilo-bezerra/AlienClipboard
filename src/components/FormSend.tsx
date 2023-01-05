@@ -1,6 +1,8 @@
-import { Box, Button, Textarea } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { sendForm } from "../models/forms";
+import { Button } from "./Button";
+import { Textarea } from "./Textarea";
 
 type Props = {
   onSubmit: (form: sendForm) => void;
@@ -29,7 +31,6 @@ function FormSend({ onSubmit }: Props) {
         onChange={({ target }) => setContent(target.value)}
         placeholder="Put here the text that you want to clipboard"
         resize="vertical"
-        rows={5}
         isInvalid={isError}
         mb={2}
       />
