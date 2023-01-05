@@ -1,21 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
-  Box,
-  Button,
+
   Container,
   Heading,
-  Input,
-  Text,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
 } from "@chakra-ui/react";
 import Header from "./components/Header";
 import FormSend from "./components/FormSend";
 import FormRecover from "./components/FormRecover";
 import { recoverForm, sendForm } from "./models/forms";
 import { api } from "./services/api";
-import { Textarea } from "./components/Textarea";
+import { Textarea } from "./components/form/Textarea";
 import { Alert } from "./components/Alert";
 import { AccessCodeBox } from "./components/AccessCodeBox";
 

@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { sendForm } from "../models/forms";
 import { Button } from "./Button";
-import { Textarea } from "./Textarea";
+import { Textarea } from "./form/Textarea";
 
 type Props = {
   onSubmit: (form: sendForm) => void;
